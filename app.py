@@ -192,9 +192,16 @@ def update_metrics_plot(cleaned_json_data, metric):
 
     ratio_df['ratio'] = ratio_df["experiment"] / ratio_df["regular"]
     ratio_df['rolling_ratio'] = ratio_df['ratio'].rolling(7).mean()
-    mean = float(ratio_df["experiment"].sum()) / float(ratio_df["regular"].sum())
+    try:
+        mean = float(ratio_df["experiment"].sum()) / float(ratio_df["regular"].sum())
+    except ZeroDivisionError:
+        mean = 0
+
     ratio_df['mean'] = mean
-    error = math.sqrt(ratio_df["experiment"].sum())/ math.sqrt(ratio_df["regular"].sum())
+    try:
+        error = math.sqrt(ratio_df["experiment"].sum())/ math.sqrt(ratio_df["regular"].sum())
+    except ZeroDivisionError:
+        error = 0
     ratio_df['mean_upper_bound'] = ratio_df['mean'] - (4 * (error - mean))
     ratio_df['mean_lower_bound'] = ratio_df['mean'] + (4 * (error - mean))
 
