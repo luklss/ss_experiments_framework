@@ -207,18 +207,21 @@ def update_metrics_plot(cleaned_json_data, metric):
 
     # try calculating the error 4 sigmas above and below, if there is enough data as well
     try:
-        error = math.sqrt(ratio_df["experiment"].sum())/ math.sqrt(ratio_df["regular"].sum())
+        error = 4 / math.sqrt(ratio_df["regular"].sum())
     except ZeroDivisionError:
         error = 0
-    ratio_df['mean_upper_bound'] = ratio_df['mean'] - (4 * (error - mean))
-    ratio_df['mean_lower_bound'] = ratio_df['mean'] + (4 * (error - mean))
+    ratio_df['mean_upper_bound'] = ratio_df['mean'] + error
+    ratio_df['mean_lower_bound'] = ratio_df['mean'] - error
 
+
+    # base line
+    ratio_df['baseline'] = 1
 
 
     # build the figure
     traces = []
 
-    lines = ['ratio', 'rolling_ratio', 'mean', 'mean_upper_bound', 'mean_lower_bound']
+    lines = ['ratio', 'baseline','rolling_ratio', 'mean', 'mean_upper_bound', 'mean_lower_bound' ]
     for line in lines:
         x = ratio_df['theday']
         y = ratio_df[line]
