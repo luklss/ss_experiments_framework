@@ -190,14 +190,22 @@ def update_metrics_plot(cleaned_json_data, metric):
 
     ratio_df = regular_df.merge(experiment_df, on = 'theday')
 
+
+    # calculate ratio metrics
     ratio_df['ratio'] = ratio_df["experiment"] / ratio_df["regular"]
     ratio_df['rolling_ratio'] = ratio_df['ratio'].rolling(7).mean()
+
+
+    # try calculating a mean if there is enough data in both tracks
     try:
         mean = float(ratio_df["experiment"].sum()) / float(ratio_df["regular"].sum())
     except ZeroDivisionError:
         mean = 0
 
     ratio_df['mean'] = mean
+
+
+    # try calculating the error 4 sigmas above and below, if there is enough data as well
     try:
         error = math.sqrt(ratio_df["experiment"].sum())/ math.sqrt(ratio_df["regular"].sum())
     except ZeroDivisionError:
@@ -207,10 +215,7 @@ def update_metrics_plot(cleaned_json_data, metric):
 
 
 
-    #ratio_df = ratios_data[0].merge(ratios_data[1], on = 'theday')
-    #ratio_df['ratio'] = ratio_df[str(metric) + "_x"] / ratio_df[str(metric) + "_y"]
-    #ratio_df['rolling_ratio'] = ratio_df['ratio'].rolling(7).mean()
-    #print ratio_df
+    # build the figure
     traces = []
 
     lines = ['ratio', 'rolling_ratio', 'mean', 'mean_upper_bound', 'mean_lower_bound']
