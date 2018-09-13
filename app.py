@@ -47,6 +47,7 @@ image_filename = 'test.jpg' # replace with your own image
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 app = dash.Dash()
+server = app.server
 
 # adds a nice look to the app
 app.css.append_css({
