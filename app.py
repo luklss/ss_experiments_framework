@@ -193,7 +193,7 @@ def update_metrics_plot(cleaned_json_data, metric):
 
     # calculate ratio metrics
     ratio_df['ratio'] = ratio_df["experiment"] / ratio_df["regular"]
-    ratio_df['rolling_ratio'] = ratio_df['ratio'].rolling(7).mean()
+    ratio_df['rolling_ratio'] = ratio_df['experiment'].rolling(7, min_periods = 7).sum() / ratio_df['regular'].rolling(7, min_periods = 1).sum()
 
 
     # try calculating a mean if there is enough data in both tracks
