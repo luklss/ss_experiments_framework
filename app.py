@@ -8,11 +8,15 @@ from datetime import datetime
 import numpy as np
 import time
 import base64
+from data_extractor import DataExtractor
 
 
 def load_data():
-    df = pd.read_csv("data/ng5_experiment_base.csv",
-                     delimiter = ",")
+    df = DataExtractor().get_data()
+
+
+    #df = pd.read_csv("data/ng5_experiment_base.csv",
+    #                 delimiter = ",")
 
     df['thedayunix'] =  pd.to_datetime(df['theday']).astype(np.int64) // 10**9
     # some dates are empty

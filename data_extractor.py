@@ -8,9 +8,11 @@ import pandas as pd
 
 class DataExtractor:
 
-    def __init__(self, experiment_params, base_query):
-        self.experiment_params = experiment_params
-        self.base_query = base_query
+    def __init__(self,
+                 experiment_params = 'experiment_config.json',
+                 base_query = 'sql/base_sql.sql'):
+        self.experiment_params = json.load(open(experiment_params))
+        self.base_query = open(base_query).read()
         self.conn = self.__connect__()
         self.yesterday_date = self.__get_yesterday__()
         self.query = self.__mount_query__()
@@ -57,46 +59,26 @@ class DataExtractor:
 
     def __extract_data__(self):
 
-        #data = self.cursor.execute(self.query)
-        #rows = self.cursor.fetchall()
+        print "extracting data..."
 
         data = pd.read_sql_query(self.query, self.conn)
+
+        print "data extraction done!!"
         return data
 
     def output_csv(self, path):
         self.data.to_csv("test.csv")
 
+    def get_data(self):
+        return self.data
+
 
 def main(**kwargs):
 
-    file_contents = json.load(kwargs['config'][0])
-    base_query = kwargs['base_query'][0].read()
+    file_contents = kwargs['config'][0]
+    base_query = kwargs['base_query'][0]
     data_extractor = DataExtractor(file_contents, base_query)
     data_extractor.output_csv('test')
-
-
-
-
-
-    #assert (kwargs['expid'] is None or kwargs['query'] is None) , "you should provide one or other"
-    #fd = open('sql/base_query.sql', 'r')
-    #sql = fd.read().format(kwargs['expid'])
-    #fd.close()
-    #conn_str = "dbname={} user={} host={} port={} password={}".format(
-    #    os.environ['PGDATABASE'],
-    #    os.environ['PGUSER'],
-    #    os.environ['PGHOST'],
-    #    os.environ['PGPORT'],
-    #    os.environ['RSPASSWORD'])
-    #try:
-    #    conn = psycopg2.connect(conn_str)
-    #except:
-    #    print "did not connect"
-    #cur = conn.cursor()
-    #cur.execute(sql)
-    #rows = cur.fetchall()
-    #print(rows)
-
 
 
 if __name__ == "__main__":
@@ -105,10 +87,8 @@ if __name__ == "__main__":
         description = "to be filled"
     )
     parser.add_argument('-c', '--config', nargs = 1,
-                        help="JSON file to be processed",
-                        type=argparse.FileType('r'))
+                        help="JSON file to be processed")
     parser.add_argument('-q', '--base_query', nargs = 1,
-                        help = 'sql file with the base query string',
-                        type=argparse.FileType('r'))
+                        help = 'sql file with the base query string')
 
     main(**vars(parser.parse_args()))
