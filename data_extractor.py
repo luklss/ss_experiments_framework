@@ -59,7 +59,7 @@ class DataExtractor:
 
     def __extract_data__(self):
 
-        print "extracting data..."
+        print "extracting data from db..."
 
         data = pd.read_sql_query(self.query, self.conn)
 
@@ -67,7 +67,10 @@ class DataExtractor:
         return data
 
     def output_csv(self, path):
-        self.data.to_csv("test.csv")
+        self.data.to_csv(path)
+
+    def output_stdout(self):
+        print self.data.to_string()
 
     def get_data(self):
         return self.data
@@ -75,10 +78,13 @@ class DataExtractor:
 
 def main(**kwargs):
 
-    file_contents = kwargs['config'][0]
-    base_query = kwargs['base_query'][0]
+    file_contents = kwargs['config']
+    base_query = kwargs['base_query']
     data_extractor = DataExtractor(file_contents, base_query)
-    data_extractor.output_csv('test')
+    if kwargs['output_path']:
+        data_extractor.output_csv(kwargs['output_path'])
+    else:
+        data_extractor.output_stdout()
 
 
 if __name__ == "__main__":
@@ -86,9 +92,11 @@ if __name__ == "__main__":
         prog = "to be filled",
         description = "to be filled"
     )
-    parser.add_argument('-c', '--config', nargs = 1,
+    parser.add_argument('-c', '--config',
                         help="JSON file to be processed")
-    parser.add_argument('-q', '--base_query', nargs = 1,
+    parser.add_argument('-q', '--base_query',
                         help = 'sql file with the base query string')
+    parser.add_argument('-o', '--output_path',
+                        help = 'if the output is to be saved in a csv, specify the path here')
 
     main(**vars(parser.parse_args()))

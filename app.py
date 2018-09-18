@@ -14,11 +14,14 @@ from data_extractor import DataExtractor
 def load_data():
     df = DataExtractor().get_data()
 
+    #df = pd.read_csv("data/data_extraction_data.csv")
 
     #df = pd.read_csv("data/ng5_experiment_base.csv",
     #                 delimiter = ",")
 
-    df['thedayunix'] =  pd.to_datetime(df['theday']).astype(np.int64) // 10**9
+
+    df['theday'] = df['theday'].astype('str')
+    df['thedayunix'] = pd.to_datetime(df['theday']).astype(np.int64) // 10**9
     # some dates are empty
     df = df.dropna()
     return df
