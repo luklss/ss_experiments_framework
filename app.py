@@ -33,8 +33,9 @@ def unixTimeMillis(dt):
 def getMarks(data, n):
     daterange = pd.date_range(start=pd.to_datetime(data.min(),unit='s'),end=pd.to_datetime(data.max(), unit = 's'),freq='d')
     result = {}
+    days_per_interval = len(daterange) / n
     for index, date in enumerate(daterange):
-        if(index%n == 0):
+        if(index % days_per_interval == 0):
             result[unixTimeMillis(date)] = str(date.strftime('%Y-%m-%d'))
 
     if not unixTimeMillis(daterange.max()) in result:
@@ -124,13 +125,44 @@ app.layout = html.Div(children=[
             max = df['thedayunix'].max(),
             value = [df['thedayunix'].min(), df['thedayunix'].max()],
             step = None,
-            marks= getMarks(df['thedayunix'], 14)
+            marks= getMarks(df['thedayunix'], 10)
         ),
     ],
     style={'width': '100%', 'display': 'inline-block', 'textAlign': 'center'}),
     # this guy is a way of caching data within the browser, to share data among callbacks
     html.Div(id='caching-in-browser', style={'display': 'none'})
 ])
+
+
+@app.callback(dash.dependencies.Output('theday-slider', 'min'),
+              [dash.dependencies.Input('experiment-id', 'value')
+               ])
+def update_slider(experiment):
+    local_df = df[df['experimenttypename'] == experiment]
+    return local_df['thedayunix'].min()
+
+
+@app.callback(dash.dependencies.Output('theday-slider', 'max'),
+              [dash.dependencies.Input('experiment-id', 'value')])
+def update_slider(experiment):
+    local_df = df[df['experimenttypename'] == experiment]
+    return local_df['thedayunix'].max()
+
+@app.callback(dash.dependencies.Output('theday-slider', 'marks'),
+              [dash.dependencies.Input('experiment-id', 'value')])
+def update_slider(experiment):
+    local_df = df[df['experimenttypename'] == experiment]
+    return getMarks(local_df['thedayunix'], 10)
+
+
+@app.callback(dash.dependencies.Output('theday-slider', 'value'),
+              [dash.dependencies.Input('experiment-id', 'value')])
+def update_slider(experiment):
+    local_df = df[df['experimenttypename'] == experiment]
+    print [local_df['thedayunix'].min(), local_df['thedayunix'].max()]
+    print [local_df['theday'].min(), local_df['theday'].max()]
+    return [local_df['thedayunix'].min(), local_df['thedayunix'].max()]
+
 
 # caching filtered data for sharing
 @app.callback(dash.dependencies.Output('caching-in-browser', 'children'),
