@@ -10,7 +10,7 @@ class DataExtractor:
 
     def __init__(self,
                  experiment_params = 'experiment_config.json',
-                 base_query = 'sql/base_sql.sql'):
+                 base_query = 'sql/base_sql_grouped.sql'):
         self.experiment_params = json.load(open(experiment_params))
         self.base_query = open(base_query).read()
         self.conn = self.__connect__()
@@ -54,7 +54,8 @@ class DataExtractor:
 
         where = " or \n".join(where_statements)
 
-        return '{} where {}'.format(self.base_query, where)
+        #return '{} where {}'.format(self.base_query, where)
+	return self.base_query.format(where)
 
 
     def __extract_data__(self):
