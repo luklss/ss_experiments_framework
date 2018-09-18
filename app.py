@@ -93,9 +93,9 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='metric-dropdown',
             options=[{'label': 'trial', 'value': 'trial'},
-                     {'label': 'sco30m', 'value': 'sco30m'},
-                     {'label': 'qp6h', 'value': 'qp6h'},
-                     {'label': 'completedcheckout30m', 'value': 'completedcheckout30m'}],
+                     {'label': 'sco30m - put some clever description here', 'value': 'sco30m'},
+                     {'label': 'qp6h - became payer within 6 hours of the trial ', 'value': 'qp6h'},
+                     {'label': 'completed checkout within 30 minutes', 'value': 'completedcheckout30m'}],
             value = 'trial',
             clearable = False
         ),
@@ -221,17 +221,13 @@ def update_metrics_plot(cleaned_json_data, metric):
     ratio_df['mean_lower_bound'] = ratio_df['mean'] - error
 
 
-    # base line
-    ratio_df['baseline'] = 1
-
-
     # build the figure
     traces = []
 
-    lines = ['ratio', 'baseline','rolling_ratio', 'mean', 'mean_upper_bound', 'mean_lower_bound' ]
+    lines = ['ratio', 'rolling_ratio', 'mean', 'mean_upper_bound', 'mean_lower_bound' ]
     for line in lines:
         x = ratio_df['theday']
-        y = ratio_df[line]
+        y = (ratio_df[line] - 1) * 100
         mode = 'markers' if line == 'ratio' else 'lines'
         traces.append(go.Scatter(
             x = x,
@@ -240,7 +236,7 @@ def update_metrics_plot(cleaned_json_data, metric):
             name = line,
             line =  {
                 'dash': "dot" if line == "mean_upper_bound" or line == "mean_lower_bound" else "solid",
-                'color': 'rgb(0,0,0)' if 'mean' in line else None
+                'color': 'rgb(50,200,50)' if 'mean' in line else None
             }
         ))
 
