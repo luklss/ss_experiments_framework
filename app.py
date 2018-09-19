@@ -11,6 +11,31 @@ import base64
 from data_extractor import DataExtractor
 
 
+
+readme_content = '''
+### Need some help?
+
+#### Interacting
+
+You can interact with the graphs in a few ways:
+* You can filter the data using the dropwdowns and the date bar below the plots. All filtering happens simultaneously for both graphs.
+* You can also zoom in by selecting an area of a given chart, and double clicking in the graph to go back to the full view of the currently filtered data. But remember, zooming in this way **does not** filter the data.
+* Lastly, you can also remove a given line in the chart by clicking on it at the legend.
+
+#### Interpreting
+
+The plot on the left (absolute metrics) should be straight forward, it simply shows the **absolute value** of the currently selected metric for the given period and filters.
+
+The right plot can be a bit trickier. It shows much better (or worst) the experiment is performing when compared to the regular track (in percentage points) for the given metric selected. If, for instance, this ratio is 5 in a given day, that means that in that day the experiment track performed 5\% better than the regular. However, how do we know when this is statistically significant? This can get hairy very fast, and is out of this cope of this help, but here is a list of the other lines in the graph that can help us to have a bigger picture statistically:
+
+* **ratio**: the percentage difference between tracks for a given day as described above. A positive value means that the experiment has more of that metric.
+* **rolling_ratio**: the seven day average of the percentage difference between the tracks. This is the same as above but fluctuates less since is the average of the past week.
+* **mean**: the percentage difference between tracks for the **totality** of the filtered data.
+* **mean_upper_bound** and **mean_lower_bound**: a statistical approximation of the confidence of the mean measure given plus or minus 4 sigmas. This is an attempt in estimating how wrong we can be or how much we can trust that measure statistically speaking. For instance, every one can related to when in a presidential election we have a candidate that has 32 plus or minus 3 percent of the vote intentions. This is analogous.
+'''
+
+
+
 def load_data():
     df = DataExtractor().get_data()
 
@@ -74,40 +99,41 @@ app.layout = html.Div(children=[
         'textAlign': 'center',
     }),
     html.Div([
-	html.Label('device'),
-        dcc.Dropdown(
-            id='device-dropdown',
-            options=[{'label': 'desktop', 'value': 1},
-                     {'label': 'other', 'value': 0}]
-        ),
-	html.Label('experiment'),
+        html.Label('Experiment', style = {'fontWeight':'bold'}),
         dcc.Dropdown(
             id='experiment-id',
             options=[{'label': i, 'value': i} for i in unique_experiments],
             value = unique_experiments[0],
             clearable = False
-        )
+        ),
+        html.P(children = 'esting this component testing this component testing this component testing this component testing this component testing this component testing this component testing this component testing this component testing this component testing this component testing this component', style = {'margin-top': 20}),
     ],
-    style={'width': '48%', 'display': 'inline-block'}),
+             style={'width': '40%', 'display': 'inline-block', 'verticalAlign': 'top', 'textAlign': 'justify', 'marginRight':'50', 'marginLeft': '50'}),
     html.Div([
-	html.Label('metric'),
+	html.Label('Metric', style = {'fontWeight':'bold'}),
         dcc.Dropdown(
             id='metric-dropdown',
-            options=[{'label': 'trial', 'value': 'trial'},
-                     {'label': 'sco30m - put some clever description here', 'value': 'sco30m'},
+            options=[{'label': 'trial - signups', 'value': 'trial'},
+                     {'label': 'sco30m - seen the checkout within 30m of signup', 'value': 'sco30m'},
                      {'label': 'qp6h - became payer within 6 hours of the trial ', 'value': 'qp6h'},
                      {'label': 'completed checkout within 30 minutes', 'value': 'completedcheckout30m'}],
             value = 'trial',
             clearable = False
         ),
-        html.Label('language'),
+        html.Label('Language', style = {'fontWeight':'bold'}),
         dcc.Dropdown(
             id='language-id',
             options=[{'label': i, 'value': i} for i in unique_languages],
             multi = True
+        ),
+        html.Label('Device', style = {'fontWeight':'bold'}),
+        dcc.Dropdown(
+            id='device-dropdown',
+            options=[{'label': 'desktop', 'value': 1},
+                     {'label': 'other', 'value': 0}]
         )
     ],
-    style={'width': '48%', 'display': 'inline-block'}),
+    style={'width': '40%', 'display': 'inline-block', 'verticalAlign': 'top', 'textAlign': 'justify', 'marginRight':'50', 'marginLeft': '50'}),
     html.Div([
         html.Div([
             html.H4("Absolute metrics", style = {'textAlign': 'center'}),
@@ -128,8 +154,12 @@ app.layout = html.Div(children=[
             marks= getMarks(df['thedayunix'], 10)
         ),
     ],
-    style={'width': '100%', 'display': 'inline-block', 'textAlign': 'center'}),
+    style={'width': '95%',  'marginRight':'50', 'marginLeft':'50'}),
     # this guy is a way of caching data within the browser, to share data among callbacks
+    html.Div([
+        dcc.Markdown(children=readme_content),
+    ],
+             style = {'marginTop': 100, 'font-size': '110%', 'marginRight' : 50, 'marginLeft': 50}),
     html.Div(id='caching-in-browser', style={'display': 'none'})
 ])
 
