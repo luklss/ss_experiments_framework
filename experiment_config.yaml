@@ -1,57 +1,9 @@
-NG5SWFacebookSignupExperiment: 
+exp1: 
   dates: ["2018-09-03", "2018-09-14"]
-  description: This experiment tests the effect of offering FB signup on the pw+email screen of the SW.
-               FB signup will require the user to 'give permission' to our app in FB.
-               We've tested this feature out a while back in the old SW,
-               and have noticed that some users do want FB signup, but don't have an email associated with their FB account.
-               We've modified the UX/UI in this experiment to better accomodate for this situation this time around.
+  description: some description here
 
-NG5SWBlog3Experiment:
-  dates: ["2018-09-19", "2018-09-28"]
-  description: Measure the signup-rate for 'old' vs. NG5-SW FOR BLOG traffic.
-               We test BLOG traffic specifically, because we've previously
-               excluded it from the NG5-SW experiment, as it's treated in
-               a slightly special way (replace word 'website' with 'blog')
-               everywhere. We hope this experiment will confirm that we
-               now support BLOG-traffic in the new SW, and that it can
-               also give us a baseline for the overall performance old vs. new.
-
-NG5SWOneToOne2Experiment:
-  dates: ["2018-09-18", "2018-09-28"]
-  description: This is the the description of the experiment.
+exp2: 
+  dates: ["2018-09-15", "2018-09-17"]
+  description: some description here
 
 
-NG5SWTopBarExperiment:
-  dates: ["2018-09-27", "2018-10-05"]
-  description: Test out the effect of the 'new topbar' in the NG5-SW.
-               The main change is that we've moved the 'primary' CTA-button
-               ('Next', 'Submit', etc.) to the top bar, where it was previously
-               positioned in the bottom right.
-
-
-NG5SWLayout5PreviewExperiment:
-  dates: ["2018-10-05", "2018-10-23"]
-  description: Give users a Layout 5-website instead of a Layout 1 website. Keep
-               everything else in the SW the same, including BG-choice.
-
-
-
-NG5SWFullScreenL5Experiment:
-  dates: ["2018-10-23", "2018-10-31"]
-  description: 'Full-screen preview of the basic website in the SW. Also change
-                the selection of available images, and make the footer controls
-                sticky on mobile. Replaces the NG5SWLayout5PreviewExperiment experiment,
-                so baseline is still NG5-SW Layout 1 preview.'
-
-NG5SWUseTemplatesExperiment:
-  dates: ["2018-11-01", ""]
-  description: Offer website templates to 'business' and 'other' users when signing up. Initially
-               only run on desktop.
-
-AdyenMobilePaymentGateway:
-  dates: ["2019-02-11", ""]
-  description: Send mobile users to a better mobile payment gateway at Adyen.
-
-RedesignedEditor:
-  dates: ["2019-02-12", ""]
-  description: Test out a new and redesigned version of the V4 editor, with cleaner and slicker navigation and sidepanels.
