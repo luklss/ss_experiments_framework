@@ -1,0 +1,53 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "experiment-app.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "experiment-app.name" . }}
+    helm.sh/chart: {{ include "experiment-app.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "experiment-app.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "experiment-app.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PGDATABASE
+            value: {{ .Values.enviroment.pgdatabase | quote }}
+          - name: PGUSER
+            value: {{ .Values.enviroment.pguser | quote }}
+          - name: PGHOST
+            value: {{ .Values.enviroment.pghost | quote }}
+          - name: PGPORT
+            value: {{ .Values.enviroment.pgport | quote }}
+          - name: RSPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.enviroment.redshiftSecret }}
+                key: {{ .Values.enviroment.password }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port:  {{ .Values.service.targetPort }}
+            initialDelaySeconds: 20
+            periodSeconds: 3
+          readynessProbe:
+            httpGet:
+              path: /
+              port:  {{ .Values.service.targetPort }}
+
+

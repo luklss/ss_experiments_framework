@@ -1,0 +1,32 @@
+# Default values for experiment-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# TODO: Move office ip range to value
+
+replicaCount: 2
+
+image:
+  repository: simplesite/experiments-app
+  pullSecret: dockerhub-secret
+  tag: latest
+  pullPolicy: IfNotPresent
+  containerPort: 8000
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8000
+  hostname: experimentdashboard.devops.simplesite.host
+  secGrp: 87.54.52.128/29
+
+enviroment:
+  pgdatabase: reporting
+  pguser: dbexcel
+  pghost: redshift.aws.simplesite.host
+  pgport: 5439
+  redshiftSecret: redshift-credentials
+  password: password
+

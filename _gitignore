@@ -1,0 +1,6 @@
+venv
+cache
+*.pyc
+.DS_Store
+.env
+*.csv
